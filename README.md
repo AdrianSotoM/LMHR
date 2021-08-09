@@ -16,7 +16,5 @@ Lead contact during manuscript review:
 david.ludwig@childrens.harvard.edu  
 
 Corresponding authors: 
-nicholas_norwitz@hms.harvard.edu  
-dave@citizensciencefoundation.org 
-adrian.sotom@incmnsz.mx 
+nicholas_norwitz@hms.harvard.edu, dave@citizensciencefoundation.org, adrian.sotom@incmnsz.mx 
 
