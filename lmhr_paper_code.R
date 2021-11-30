@@ -227,24 +227,20 @@ summary(m2)
 confint(m2)
 
 ### Model 3. Predicting LDL changes with Triglycerides/HDL ratio and BMI.
-m3 <- lm(delta_LDL~bmi,data = datamodels)
+m3 <- lm(delta_LDL~pTGtoHDL+bmi,data = datamodels)
 summary(m3)
 confint(m3)
 
 ## LMHR can be seen or defined as a linear model for predicting someone is lean,
 ## given their lipid markers.
 ## Predicting BMI with lipid markers
+## Please note this model is included in Main Table 2 as m4.
 lmhrlm <- lm(bmi~pLDL+pHDL+pTG,data = datamodels)
 summary(lmhrlm)
 confint(lmhrlm)
 
 lmhrlm_perf <- compare_performance(lmhrlm)
 lmhrlm_perf
-
-## Model 4. Predicting LDL changes with the LMHR phenotype.
-m4 <- lm(delta_LDL~pTGtoHDL+bmi, data=data)
-summary(m4)
-confint(m4)
 
 ###############################################################################
 
@@ -317,12 +313,19 @@ heatmap_plot2
 ###############################################################################
 
 # Comparing all models. (SUPPLEMENTAL FIGURE 2)
-comp <- compare_performance(m1,m2,m3,m4)
+## To show BMI does not tell the whole story, model 5 showd predicting LDLc 
+## changes with BMI alone.
+m5 <- lm(delta_LDL~bmi, data=data)
+summary(m5)
+confint(m5)
+
+comp <- compare_performance(m1,m2,m3,m5)
 comp
 plot(comp)
 
-### Model 4 was the best model we found and we checked its linear assumptions.
-check_model(m4)
+
+### Model 3 was the best model we found and we checked its linear assumptions.
+check_model(m3)
 
 ###############################################################################
 
