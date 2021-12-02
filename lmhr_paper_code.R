@@ -52,7 +52,7 @@ data <- read_excel("lmhr_paper_data.xlsx")
 
 ###############################################################################
 
-# DATA FILTERING
+# DATA FILTERING (incomplete data and fasting filters were implemented directly at the dataset).
 ## Please, note filters will overlap in most excluded cases (they won't add up).
 # How many and why people will be excluded? (FIGURE 1)
 ## Because they were on lipid lowering medications.
