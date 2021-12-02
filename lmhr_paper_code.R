@@ -176,7 +176,7 @@ quantile(data$deltaTGtoHDL, probs = c(0.05,0.25,0.5,0.75,0.95))
 # Table 1 (MAIN TABLE 1)
 table_all <- CreateContTable(data=data, vars = c("age",
 "cTG","cLDL","cHDL","pLDL","pHDL","pTG","bmi","delta_LDL","delta_HDL",
-"delta_TG","cTGtoHDL","pTGtoHDL","deltaTGtoHDL"))
+"delta_TG","cTGtoHDL","pTGtoHDL","deltaTGtoHDL","net_carbs"))
 
 summary(table_all)
 table_all_sex <- CreateCatTable(data=data, vars = c("gender"))
@@ -333,8 +333,6 @@ check_model(m3)
 tree_map1 <- rpart(formula = delta_LDL ~ gender + bmi + pTG + pHDL + pTGtoHDL,
                    data= data, method = 'anova')
 
-## Please, note that for improving readability, this figure was edited after
-## R output and that the "<" is inverted in the manuscript figure.
 rpart.plot(tree_map1,cex=0.7,box.palette = "RdBu")
 
 ###############################################################################
