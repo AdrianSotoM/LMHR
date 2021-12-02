@@ -5,7 +5,7 @@
 ###############################################################################
 
 # Setting up working directory. Make sure you choose your own!
-setwd("C:/Users/adria/Dropbox/UIEM/Proyectos/LMHR")
+setwd("C:/Users/adria/Dropbox/UIEM/LEAD/Proyectos/LMHR")
 
 ###############################################################################
 
@@ -46,14 +46,14 @@ conflict_prefer("filter", "dplyr")
 ###############################################################################
 
 # DATA UPLOAD.
-## Cholesterol Super Survey raw data
-data <- read_excel("lmhrpaper_data.xlsx")
+## Cholesterol Super Survey raw data. Please note some variables were created
+## with code (lines 127-133) and, therefore, are not included in the dataset.
+data <- read_excel("lmhr_paper_data.xlsx")
 
 ###############################################################################
 
 # DATA FILTERING
 ## Please, note filters will overlap in most excluded cases (they won't add up).
-
 # How many and why people will be excluded? (FIGURE 1)
 ## Because they were on lipid lowering medications.
 sum(data$lipid_low_rx==0, na.rm = TRUE)
@@ -124,7 +124,7 @@ data <- data %>%
     filter(cHDL<=200) %>%
     filter(pHDL>=10) %>%
     filter(pHDL<=200) %>%
-## Creating response variables
+## Creating response variables.
       mutate(delta_LDL= cLDL-pLDL) %>% 
       mutate(delta_HDL= cHDL-pHDL) %>% 
       mutate(delta_TG= cTG-pTG) %>% 
@@ -173,7 +173,7 @@ quantile(data$deltaTGtoHDL, probs = c(0.05,0.25,0.5,0.75,0.95))
 
 ###############################################################################
 
-# Table 1
+# Table 1 (MAIN TABLE 1)
 table_all <- CreateContTable(data=data, vars = c("age",
 "cTG","cLDL","cHDL","pLDL","pHDL","pTG","bmi","delta_LDL","delta_HDL",
 "delta_TG","cTGtoHDL","pTGtoHDL","deltaTGtoHDL"))
@@ -196,7 +196,7 @@ summary(table_all_sex)
 
 ## Predicting LDL change with linear models. (SUPPLEMENTAL TABLE 1)
 ### We filtered out the "hypothesis related variables" (i.e. "LMHR" category).
-datamodels <- data %>% dplyr::select(age,gender,bmi,cTG,cHDL,pLDL,pHDL,pTG,
+datamodels <- data %>% dplyr::select(age,net_carbs,gender,bmi,cTG,cHDL,pLDL,pHDL,pTG,
                                      pTGtoHDL,cTGtoHDL,delta_HDL,delta_LDL,
                                      delta_TG,deltaTGtoHDL)
 
@@ -215,7 +215,7 @@ m0_boot
 ###############################################################################
 
 # EVALUATING CANDIDATE MODELS
-## (SUPPLEMENTAL TABLE 2)
+## (MAIN TABLE 2)
 ### Model 1. Predicting LDL changes with Triglycerides and HDL.
 m1 <- lm(delta_LDL~pHDL+pTG,data = datamodels)
 summary(m1)
@@ -313,7 +313,7 @@ heatmap_plot2
 ###############################################################################
 
 # Comparing all models. (SUPPLEMENTAL FIGURE 2)
-## To show BMI does not tell the whole story, model 5 showd predicting LDLc 
+## To show BMI does not tell the whole story, model 5 predicts LDLc 
 ## changes with BMI alone.
 m5 <- lm(delta_LDL~bmi, data=data)
 summary(m5)
@@ -333,13 +333,15 @@ check_model(m3)
 tree_map1 <- rpart(formula = delta_LDL ~ gender + bmi + pTG + pHDL + pTGtoHDL,
                    data= data, method = 'anova')
 
+## Please, note that for improving readability, this figure was edited after
+## R output and that the "<" is inverted in the manuscript figure.
 rpart.plot(tree_map1,cex=0.7,box.palette = "RdBu")
 
 ###############################################################################
 
 # COMPARING LMHR CATEGORIES
 
-## (SUPPLEMENTAL Table 3)
+## (MAIN TABLE 3)
 table_lmhr <- CreateContTable(data=data,strata="lmhr", vars = c("age","bmi",
 "net_carbs","cTC","pTC","pLDL","cLDL","delta_LDL","pHDL","cHDL","delta_HDL",
 "pTG","cTG","delta_TG","pTGtoHDL","cTGtoHDL","deltaTGtoHDL"))
@@ -382,7 +384,7 @@ wilcox.test(cTGtoHDL~lmhr,data=data)
 
 ###############################################################################
 
-# Comparing LMHRs vs NHANES. 
+# Comparing LMHRs vs NHANES. (SUPPLEMENTAL TABLE 3)
 
 ## Getting NHANES' data
 ### LDL (in mg/dL) is encoded as "LBLDL" and Triglycerides (in mg/dL) as "LBXTR"
@@ -425,7 +427,7 @@ median(nhanes_data$BMXBMI, na.rm=TRUE)
 
 ###############################################################################
 
-# NHANES comparison Plots (FIGURE 3)
+# NHANES comparison Plots (MAIN FIGURE 3)
 
 ## BMI
 nhanes_bmi <- ggplot(data=data,mapping = aes(x=bmi,fill=factor(lmhr)))+
@@ -543,7 +545,7 @@ panel1
 
 ## BMI (SUPPLEMENTAL FIGURE 4)
 bmi_plot <- ggbetweenstats(
-  data=data,x=lmhr,y=bmi,type="np",
+  data=data,x=lmhr,y=bmi,type="p",
   xlab = "Phenotype", ylab = "BMI (kg/m^2)",
   outlier.tagging = TRUE,outlier.coef = 1.5,outlier.label = NULL,
   outlier.label.args = list(color = "darkgray"),
@@ -553,8 +555,8 @@ bmi_plot <- ggbetweenstats(
   title = "BMI by phenotype",
   caption = NULL) + # modifying the plot further
   ggplot2::scale_y_continuous(
-    limits = c(10,45),
-    breaks = seq(0, 45, by= 5))+
+    limits = c(10,50),
+    breaks = seq(0, 50, by= 5))+
   ggplot2::theme(text = element_text(size = 16),
                  plot.title = element_text(size=24,face = "bold"),
                  axis.title.x = element_blank(),
@@ -563,7 +565,35 @@ ggsave("bmi_plot.tiff", units="in", width=10, height=10, dpi=1000,
        compression = 'lzw')
 bmi_plot
 
+## BMI (SUPPLEMENTAL FIGURE 4)
+deltaldlc_plot <- ggbetweenstats(
+  data=data,x=lmhr,y=delta_LDL,type="np",
+  xlab = "Phenotype", ylab = "Change in LDLc (mg/dL)",
+  outlier.tagging = TRUE,outlier.coef = 1.5,outlier.label = NULL,
+  outlier.label.args = list(color = "darkgray"),
+  ggtheme = ggplot2::theme_classic(),
+  package = "yarrr",
+  palette = "google", 
+  title = "LDLc change by phenotype",
+  caption = NULL) + # modifying the plot further
+  ggplot2::scale_y_continuous(
+    limits = c(-100,1000),
+    breaks = seq(-100, 100, by= 100))+
+  ggplot2::theme(text = element_text(size = 16),
+                 plot.title = element_text(size=24,face = "bold"),
+                 axis.title.x = element_blank(),
+                 axis.title.y = element_text(size=14, colour = "gray40"))
+ggsave("ldlchange_plot.tiff", units="in", width=10, height=10, dpi=1000, 
+       compression = 'lzw')
+deltaldlc_plot
+
 ###############################################################################
+
+ow <- data %>% filter(bmi>25)
+mean(ow$delta_LDL)
+sd(ow$delta_LDL)
+median(ow$delta_LDL)
+sum(ow$delta_LDL<0, na.rm = TRUE)
 
 # LETTING YOU KNOW IT FINISHED!
 pacman::p_load(beepr)
