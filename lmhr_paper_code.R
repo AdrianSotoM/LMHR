@@ -312,7 +312,7 @@ heatmap_plot2
 
 ###############################################################################
 
-# Comparing all models. (SUPPLEMENTAL FIGURE 2)
+# Comparing all models. (SUPPLEMENTAL FIGURE 2). Edited after output for improving readability.
 ## To show BMI does not tell the whole story, model 5 predicts LDLc 
 ## changes with BMI alone.
 m5 <- lm(delta_LDL~bmi, data=data)
@@ -329,7 +329,7 @@ check_model(m3)
 
 ###############################################################################
 
-# RANDOM REGRESSION TREES (SUPPLEMENTAL FIGURE 3)
+# RANDOM REGRESSION TREES (SUPPLEMENTAL FIGURE 3). Edited after output for improving readability.
 tree_map1 <- rpart(formula = delta_LDL ~ gender + bmi + pTG + pHDL + pTGtoHDL,
                    data= data, method = 'anova')
 
