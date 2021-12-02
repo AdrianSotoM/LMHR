@@ -206,6 +206,8 @@ summary(m0)
 confint(m0)
 
 ### Evaluating how consistent is the relevance of each potential predictor.
+### Please note that, due to the nature of Bootsrap, small variations from what is reported
+### in the manuscript are expected.
 m0_step <- stepAIC(m0,direction = "backward", trace = FALSE)
 m0_step
 
