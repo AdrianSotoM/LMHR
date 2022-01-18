@@ -29,3 +29,7 @@ sum(nhanes_data$LBXTR<71, na.rm = TRUE)
 
 ### All criteria
 nhanes_data <- nhanes_data %>% filter(LBDLDL>199 & LBDHDD>79 & LBXTR<71)
+
+sum(nhanes_data$LBDLDL>199, na.rm = TRUE)
+sum(nhanes_data$LBDHDD>79, na.rm = TRUE)
+sum(nhanes_data$LBXTR<71, na.rm = TRUE)
