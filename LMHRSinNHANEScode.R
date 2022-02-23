@@ -30,12 +30,12 @@ tg <- bind_rows(tg1,tg2,tg3,tg4,tg5)
 nhanes <- merge(hdl,ldl,by="SEQN")
 nhanes <- merge(nhanes,tg,by="SEQN")
 
-### Individual criteria
+### Patients meeting individual criteria
 sum(nhanes$LBDLDL>199, na.rm = TRUE)
 sum(nhanes$LBDHDD>79, na.rm = TRUE)
 sum(nhanes$LBXTR<71, na.rm = TRUE)
 
-### All lipid criteria
+### Patients meeting all lipid criteria
 nhanes <- nhanes %>% filter(LBDLDL>199 & LBDHDD>79 & LBXTR<71)
 
 sum(nhanes$LBDLDL>199, na.rm = TRUE)
